@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardElevation="3dp"
+    app:cardCornerRadius="14dp"
+    app:strokeColor="@android:color/transparent"
+    app:strokeWidth="0dp"
+    app:cardBackgroundColor="#F7FFF0">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="14dp">
+
+        <!-- 第一行：标题 + 置顶星标 + 未读红点 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Exam arrangement update"
+                android:textColor="#162B1C"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+
+            <ImageView
+                android:id="@+id/ivPinned"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                android:contentDescription="@null"
+                android:src="@drawable/star_black"/>
+
+            <!-- 未读小红点：默认隐藏，Adapter 控制显示/隐藏 -->
+            <View
+                android:id="@+id/dotUnread"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:background="@drawable/bg_dot_unread"
+                android:visibility="gone"
+                android:contentDescription="@string/accessibility_unread_dot"/>
+        </LinearLayout>
+
+        <!-- 摘要 -->
+        <TextView
+            android:id="@+id/tvSnippet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Midterm exam will move to next Monday, please check the new classroom list..."
+            android:textColor="#4A5C4E"
+            android:textSize="14sp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:layout_marginTop="6dp"/>
+
+        <!-- 时间与发布者 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/tvTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Aug 10, 18:30"
+                android:textColor="#7A8E7F"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/tvAuthor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Teacher Li"
+                android:textColor="#7A8E7F"
+                android:textSize="12sp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

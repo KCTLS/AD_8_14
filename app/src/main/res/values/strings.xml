@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">AD Project</string>
+    <string name="cd_answer_icon">Answer status icon</string>
+    <string name="cd_correct_icon">Correct icon</string>
+    <string name="cd_wrong_icon">Wrong icon</string>
+    <string name="back">Back</string>
+    <string name="accessibility_unread_dot">unread</string>
+</resources>

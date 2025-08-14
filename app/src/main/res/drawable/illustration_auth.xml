@@ -1,0 +1,14 @@
+<!-- res/drawable/illustration_auth.xml -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="240dp" android:height="140dp" android:viewportWidth="240"
+    android:viewportHeight="140">
+    <path
+        android:fillColor="#E6F3DA"
+        android:pathData="M16,16h208a16,16 0,0 1,16 16v76a16,16 0,0 1,-16 16H16a16,16 0,0 1,-16 -16V32a16,16 0,0 1,16 -16z"/>
+    <path
+        android:fillColor="#C2ECBF"
+        android:pathData="M0,95c40,-10 60,-30 120,-15 60,15 80,5 120,-8v31H0z"/>
+    <path
+        android:fillColor="#A7DCA3"
+        android:pathData="M0,110c40,-8 60,-24 120,-12 60,12 80,4 120,-6v28H0z"/>
+</vector>

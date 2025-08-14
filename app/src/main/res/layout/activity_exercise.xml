@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ExerciseActivity">
+
+    <!-- 欢迎文字 -->
+    <TextView
+        android:id="@+id/welcomeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Good to see you, Jason.\nYour progress starts here."
+        android:textSize="25sp"
+        android:textColor="#000000"
+        android:gravity="left"
+        android:textStyle="bold"
+        android:padding="15dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.04"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        />
+
+    <!-- 搜索框 -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/searchCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="12dp"
+        app:cardBackgroundColor="#FFFFFF"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintTop_toBottomOf="@id/welcomeText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_chainStyle="spread">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#F1FFE7"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <EditText
+                android:id="@+id/searchEditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Find questions you're interested in"
+                android:textColor="#3E5F44"
+                android:textSize="16sp"
+                android:background="@android:color/transparent"
+                android:padding="8dp"
+                android:textStyle="bold"
+                android:textColorHint="#3E5F44" />
+
+            <ImageView
+                android:id="@+id/searchIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/searchicon"
+                android:contentDescription="Search"
+                android:padding="8dp"
+                app:tint="#FF3E5F44" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- 筛选按钮 -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/filterCard"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="12dp"
+        android:background="@drawable/card_border"
+        app:cardBackgroundColor="#FFFFFF"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintTop_toBottomOf="@id/searchCard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_chainStyle="spread">
+
+        <LinearLayout
+            android:id="@+id/filterLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#F1FFE7"
+            android:orientation="horizontal"
+            android:padding="4dp"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp">
+
+        <Button
+            android:id="@+id/gradeButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Grade"
+            android:textSize="14sp"
+            android:padding="2dp"
+            android:backgroundTint="#C2ECBF"
+            android:textColor="#000000"
+            android:singleLine="true"
+            android:gravity="center"
+            android:layout_marginEnd="4dp"/>
+
+        <Button
+            android:id="@+id/subjectButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Subject"
+            android:textSize="14sp"
+            android:padding="6dp"
+            android:backgroundTint="#C2ECBF"
+            android:textColor="#000000"
+            android:singleLine="true"
+            android:gravity="center"
+            android:layout_marginEnd="4dp" />
+
+        <Button
+            android:id="@+id/categoryButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Category"
+            android:textSize="14sp"
+            android:padding="6dp"
+            android:backgroundTint="#C2ECBF"
+            android:textColor="#000000"
+            android:singleLine="true"
+            android:gravity="center"
+            android:layout_marginEnd="4dp" />
+
+        <Button
+            android:id="@+id/topicButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Topic"
+            android:textSize="14sp"
+            android:padding="6dp"
+            android:backgroundTint="#C2ECBF"
+            android:textColor="#000000"
+            android:singleLine="true"
+            android:gravity="center" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
+
+
+    <!-- 卡片列表 -->
+    <ListView
+        android:id="@+id/questionList"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/filterCard"
+        app:layout_constraintBottom_toTopOf="@id/bottomNav"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="20dp"
+        />
+
+    <!-- 底部导航 -->
+    <LinearLayout
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/exerciseButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Exercise"
+            android:textColor="#000000"
+            android:textSize="14sp"
+            android:padding="6dp"
+            android:gravity="center"
+            android:drawableTop="@drawable/exerciseicon"
+            android:background="@drawable/button_background"
+            />
+
+        <Button
+            android:id="@+id/dashboardButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Dashboard"
+            android:textColor="#000000"
+            android:textSize="14sp"
+            android:padding="6dp"
+            android:gravity="center"
+            android:drawableTop="@drawable/dashboardicon"
+            android:background="@drawable/button_background"
+            />
+
+        <Button
+            android:id="@+id/classButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Class"
+            android:textColor="#000000"
+            android:textSize="14sp"
+            android:padding="6dp"
+            android:gravity="center"
+            android:drawableTop="@drawable/classicon"
+            android:background="@drawable/button_background"
+            />
+
+        <Button
+            android:id="@+id/homeButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Home"
+            android:textColor="#000000"
+            android:textSize="14sp"
+            android:padding="6dp"
+            android:gravity="center"
+            android:drawableTop="@drawable/homeicon"
+            android:background="@drawable/button_background"
+            />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

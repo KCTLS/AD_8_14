@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_selected="true"> <!-- 选中状态 -->
+        <shape>
+            <solid android:color="#C2CFC1" /> <!-- 选中颜色 -->
+            <corners android:radius="8dp" /> <!-- 圆角 -->
+        </shape>
+    </item>
+    <item> <!-- 未选中状态 -->
+        <shape>
+            <solid android:color="#FAFFF7" /> <!-- 未选中颜色 -->
+            <corners android:radius="8dp" /> <!-- 圆角 -->
+        </shape>
+    </item>
+</selector>

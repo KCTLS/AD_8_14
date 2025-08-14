@@ -1,0 +1,13 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.ADProject" parent="Theme.MaterialComponents.Light.Bridge">
+        <!-- Customize your light theme here. -->
+        <item name="android:windowBackground">@color/custom_background</item>
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- 禁用 ActionBar -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.ADProject" parent="Base.Theme.ADProject" />
+</resources>
