@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit
 
 object ApiClient {
 
-    private const val DEFAULT_BASE_URL = "http://10.0.2.2:8080/student/"
+    private const val DEFAULT_BASE_URL = "http://adproject-backend.southeastasia.cloudapp.azure.com/student/"
     @Volatile private var baseUrl: String = BuildConfig.BASE_URL.ifBlank { DEFAULT_BASE_URL }
 
     // 用持久化 Cookie
