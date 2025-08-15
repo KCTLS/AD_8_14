@@ -5,7 +5,6 @@ import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -18,12 +17,9 @@ class RecommendedAdapter(
 ) : RecyclerView.Adapter<RecommendedAdapter.VH>() {
 
     inner class VH(v: View) : RecyclerView.ViewHolder(v) {
-        // 去掉 icon
-        val title: TextView = v.findViewById(R.id.title)
-        val subtitle: TextView = v.findViewById(R.id.subtitle)
-        val badge: TextView = v.findViewById(R.id.badge)
+        val root: View       = v.findViewById(R.id.rootClickable) // 整卡可点（带水波纹）
+        val title: TextView  = v.findViewById(R.id.txtTitle)
         val thumb: ImageView = v.findViewById(R.id.thumb)
-        val startBtn: Button = v.findViewById(R.id.startBtn)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
@@ -34,26 +30,30 @@ class RecommendedAdapter(
 
     override fun onBindViewHolder(h: VH, position: Int) {
         val item = data[position]
-        h.title.text = item.title
-        h.subtitle.text = "${item.subject ?: "—"} · ${item.grade ?: "—"} · ${item.questions} questions"
-        h.badge.text = item.difficulty ?: "Medium"
 
+        // 标题
+        h.title.text = item.title
+
+        // 缩略图：base64 -> Bitmap；失败/为空用占位图
+        val placeholder = R.drawable.placeholder_image
         val b64 = item.imageBase64
         if (!b64.isNullOrBlank()) {
             try {
-                val bytes = Base64.decode(b64.substringAfter(","), Base64.DEFAULT)
-                val input = ByteArrayInputStream(bytes)
-                val bm = BitmapFactory.decodeStream(input)
-                h.thumb.setImageBitmap(bm)
+                val pure = b64.substringAfter(",", b64) // 兼容 dataURI 或纯 base64
+                val bytes = Base64.decode(pure, Base64.DEFAULT)
+                ByteArrayInputStream(bytes).use { input ->
+                    val bm = BitmapFactory.decodeStream(input)
+                    if (bm != null) h.thumb.setImageBitmap(bm) else h.thumb.setImageResource(placeholder)
+                }
             } catch (_: Exception) {
-                h.thumb.setImageResource(android.R.color.darker_gray)
+                h.thumb.setImageResource(placeholder)
             }
         } else {
-            h.thumb.setImageResource(android.R.color.darker_gray)
+            h.thumb.setImageResource(placeholder)
         }
 
-        h.startBtn.setOnClickListener { onStart(item) }
-        h.itemView.setOnClickListener { onStart(item) } // 整卡可点
+        // 整卡点击
+        h.root.setOnClickListener { onStart(item) }
     }
 
     override fun getItemCount(): Int = data.size
@@ -66,13 +66,8 @@ class RecommendedAdapter(
 
     fun addItem(item: RecommendedPractice) {
         val i = data.indexOfFirst { it.id == item.id }
-        if (i >= 0) {
-            data[i] = item
-            notifyItemChanged(i)
-        } else {
-            data.add(item)
-            notifyItemInserted(data.size - 1)
-        }
+        if (i >= 0) { data[i] = item; notifyItemChanged(i) }
+        else { data.add(item); notifyItemInserted(data.size - 1) }
     }
 
     fun clear() {

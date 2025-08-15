@@ -78,7 +78,7 @@ class AssignmentAdapter(
                     itemView.alpha = 0.8f
                     itemView.isEnabled = false
                     itemView.setOnClickListener {
-                        Toast.makeText(it.context, "已过期", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(it.context, "Expired", Toast.LENGTH_SHORT).show()
                     }
                 }
                 Status.COMPLETED -> {
@@ -88,7 +88,7 @@ class AssignmentAdapter(
                     itemView.alpha = 1f
                     itemView.isEnabled = false
                     itemView.setOnClickListener {
-                        Toast.makeText(it.context, "已提交", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(it.context, "Submitted", Toast.LENGTH_SHORT).show()
                     }
                 }
                 Status.DOING -> {

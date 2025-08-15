@@ -82,7 +82,7 @@ class ClassAssignmentActivity : AppCompatActivity() {
 
     private fun loadAssignments() {
         if (classId <= 0) {
-            Toast.makeText(this, "缺少 classId", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Missing classId", Toast.LENGTH_SHORT).show()
             return
         }
         setLoading(true)

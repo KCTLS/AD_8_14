@@ -12,7 +12,7 @@
         android:id="@+id/welcomeText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Good to see you, Jason.\nYour progress starts here."
+        android:text=""
         android:textSize="25sp"
         android:textColor="#000000"
         android:gravity="left"
@@ -23,8 +23,7 @@
         app:layout_constraintVertical_bias="0.04"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
-        />
+        app:layout_constraintHorizontal_bias="0.1" />
 
     <!-- 搜索框 -->
     <androidx.cardview.widget.CardView
@@ -194,7 +193,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Dashboard"
+            android:text="History"
             android:textColor="#000000"
             android:textSize="14sp"
             android:padding="6dp"

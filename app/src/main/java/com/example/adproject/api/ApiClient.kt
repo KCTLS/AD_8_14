@@ -1,10 +1,11 @@
-// api/ApiClient.kt（只展示关键改动）
+// api/ApiClient.kt
 package com.example.adproject.api
 
 import android.content.Context
 import com.example.adproject.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -76,5 +77,35 @@ object ApiClient {
     fun switchBaseUrl(newBaseUrl: String) {
         baseUrl = if (newBaseUrl.endsWith("/")) newBaseUrl else "$newBaseUrl/"
         rebuild()
+    }
+
+    // ---------- ↓↓↓ 新增：给 UserSession 用的小工具 ↓↓↓ ----------
+
+    /** 暴露给 UserSession：当前是否还持有任何 Cookie */
+    fun hasCookies(): Boolean = cookieJar.hasCookies()
+
+    /**
+     * 轻量会话自检：利用你已有的 /student/viewQuestion 接口来判断是否仍登录
+     * 返回 true 表示仍然有效；false 表示应当回到登录页
+     */
+    suspend fun isSessionAlive(): Boolean {
+        // 直接用 OkHttp 做一个最小 GET，避免依赖业务层
+        val url = (if (baseUrl.endsWith("/")) baseUrl else "$baseUrl/") +
+                // baseUrl 已是 .../student/，这里用相对路径即可
+                "viewQuestion?keyword=&questionName=&grade=&subject=&topic=&category=&page=1&questionIndex=-1"
+
+        val req: Request = Request.Builder().url(url).get().build()
+
+        return try {
+            okHttp.newCall(req).execute().use { resp ->
+                if (resp.code == 401) return false
+                val body = resp.body?.string().orEmpty()
+                // 你日志里未登录时返回：{"code":0,"msg":"未登录或会话已失效"}
+                !body.contains("未登录或会话已失效") && !body.contains("\"code\":0")
+            }
+        } catch (_: Exception) {
+            // 网络异常时，保守起见视为无效（避免误放行）
+            false
+        }
     }
 }

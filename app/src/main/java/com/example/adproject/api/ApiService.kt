@@ -13,7 +13,8 @@ import com.example.adproject.model.RegisterRequest
 import com.example.adproject.model.Result
 import com.example.adproject.model.SelectAssignmentResponse
 import com.example.adproject.model.SelectQuestionDTO
-import com.example.adproject.model.UploadQuestionDTO   // ✅
+import com.example.adproject.model.StudentNameResponse
+import com.example.adproject.model.UploadQuestionRequest
 import com.example.adproject.model.ViewClassResponse
 import com.google.gson.JsonObject
 import retrofit2.Response
@@ -107,6 +108,9 @@ interface ApiService {
         @Query("accuracy") accuracy: Double ): Result<String> // 👈 改这里
 
     // ====== 题目上传（返回 data 为 null，改为 Any? 以兼容） ======
-    @POST("upload-question")
-    suspend fun uploadQuestion(@Body body: UploadQuestionDTO): Response<Result<Any?>>
+    @POST("/student/upload-question")
+    suspend fun uploadQuestion(@Body body: UploadQuestionRequest): Response<Result<String>>
+
+    @GET("getStudentName")
+    suspend fun getStudentName(): Response<Result<StudentNameResponse>>
 }

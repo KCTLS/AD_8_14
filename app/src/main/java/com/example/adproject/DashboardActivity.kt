@@ -106,7 +106,7 @@ class DashboardActivity : AppCompatActivity() {
     /** x 从 1..n，与轴标签完全一致，避免偏移 */
     private fun updateChartForDays(days: Int) {
         if (accuracyRates.isEmpty()) {
-            Toast.makeText(this, "暂无图表数据", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "No chart data available", Toast.LENGTH_SHORT).show()
             chartView.clear()
             return
         }
@@ -116,7 +116,7 @@ class DashboardActivity : AppCompatActivity() {
         // 如果后端是从早到晚排序，保留左侧前 n 天；若从晚到早，请改成 takeLast(count)
         val slice = accuracyRates.take(count)
 
-        Log.d("ChartUpdate", "展示前 $count 天数据: $slice")
+        Log.d("ChartUpdate", "Showing data for the past $count days: $slice")
 
         val entries = slice.mapIndexed { idx, v ->
             // x 用 1..n；如果后端已是 0~100，请去掉 *100f
@@ -171,7 +171,7 @@ class DashboardActivity : AppCompatActivity() {
                 try {
                     val resp = api.dashboard()
                     if (!resp.isSuccessful) {
-                        Triple(false, "网络错误: ${resp.code()}", emptyList<Float>())
+                        Triple(false, "Network error: ${resp.code()}", emptyList<Float>())
                     } else {
                         val body = resp.body()
                         val listAny = body?.data?.accuracyRates ?: emptyList()
@@ -186,7 +186,7 @@ class DashboardActivity : AppCompatActivity() {
                         Triple(success, message, rates)
                     }
                 } catch (e: Exception) {
-                    Triple(false, e.message ?: "请求失败", emptyList<Float>())
+                    Triple(false, e.message ?: "Request failed", emptyList<Float>())
                 }
             }
 
@@ -196,7 +196,7 @@ class DashboardActivity : AppCompatActivity() {
             } else {
                 accuracyRates = data
                 if (accuracyRates.isEmpty()) {
-                    Toast.makeText(this@DashboardActivity, "暂无图表数据", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@DashboardActivity, "No chart data available", Toast.LENGTH_SHORT).show()
                 }
             }
             updateChartForDays(7)

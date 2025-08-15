@@ -102,6 +102,18 @@ class ExerciseActivity : AppCompatActivity() {
             insets
         }
 
+        // 先用本地缓存
+        val welcomeText = findViewById<TextView>(R.id.welcomeText)
+        val cached = UserSession.name(this) ?: "User"
+        welcomeText.text = "Good to see you, $cached.\nYour progress starts here."
+
+// 🔹一行异步刷新：从服务端拿到名字就更新 UI（拿不到就维持缓存）
+        coroutineScope.launch {
+            UserSession.syncNameFromServer(this@ExerciseActivity)?.let { latest ->
+                welcomeText.text = "Good to see you, $latest.\nYour progress starts here."
+            }
+        }
+
         initViews()
         loadInitialData()
     }
@@ -376,29 +388,29 @@ class ExerciseActivity : AppCompatActivity() {
                         if (resultDTO.errorMessage == null) {
                             val questions: List<QsInform> = resultDTO.data?.items ?: emptyList()
                             if (questions.isEmpty()) {
-                                Toast.makeText(this@ExerciseActivity, "没有符合条件的题目", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(this@ExerciseActivity, "No questions match the criteria", Toast.LENGTH_SHORT).show()
                             }
                             adapter.updateData(questions.toMutableList())
                             rebuildFacetOptionsFromData()
                         } else {
-                            Toast.makeText(this@ExerciseActivity, "错误: ${resultDTO.errorMessage}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@ExerciseActivity, "Error: ${resultDTO.errorMessage}", Toast.LENGTH_SHORT).show()
                         }
-                    } ?: Toast.makeText(this@ExerciseActivity, "请求失败：服务器返回空数据", Toast.LENGTH_SHORT).show()
+                    } ?: Toast.makeText(this@ExerciseActivity, "Request failed: server returned empty data", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(this@ExerciseActivity, "网络错误: ${response.code()}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@ExerciseActivity, "Network error: ${response.code()}", Toast.LENGTH_SHORT).show()
                 }
             } catch (e: retrofit2.HttpException) {
-                Toast.makeText(this@ExerciseActivity, "HTTP 错误: ${e.message()}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ExerciseActivity, "HTTP error: ${e.message()}", Toast.LENGTH_SHORT).show()
             } catch (e: java.io.IOException) {
-                Toast.makeText(this@ExerciseActivity, "网络连接失败", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ExerciseActivity, "Network connection failed", Toast.LENGTH_SHORT).show()
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(this@ExerciseActivity, "发生未知错误: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ExerciseActivity, "Unknown error occurred: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    /** 触底加载下一页 */
+    /** Load next page when reaching the bottom */
     fun loadNextPage(onAppended: ((List<QsInform>) -> Unit)? = null) {
         if (isLoading) return
         isLoading = true
@@ -429,32 +441,33 @@ class ExerciseActivity : AppCompatActivity() {
                             rebuildFacetOptionsFromData()
                             onAppended?.invoke(questions)
                         } else {
-                            Toast.makeText(this@ExerciseActivity, "没有更多题目了", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@ExerciseActivity, "No more questions", Toast.LENGTH_SHORT).show()
                             onAppended?.invoke(emptyList())
                         }
                     } else {
-                        Toast.makeText(this@ExerciseActivity, "错误: ${resultDTO.errorMessage}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@ExerciseActivity, "Error: ${resultDTO.errorMessage}", Toast.LENGTH_SHORT).show()
                         onAppended?.invoke(emptyList())
                     }
                 } else {
-                    Toast.makeText(this@ExerciseActivity, "网络错误: ${response.code()}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@ExerciseActivity, "Network error: ${response.code()}", Toast.LENGTH_SHORT).show()
                     onAppended?.invoke(emptyList())
                 }
             } catch (e: retrofit2.HttpException) {
-                Toast.makeText(this@ExerciseActivity, "HTTP 错误: ${e.message()}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ExerciseActivity, "HTTP error: ${e.message()}", Toast.LENGTH_SHORT).show()
                 onAppended?.invoke(emptyList())
             } catch (e: java.io.IOException) {
-                Toast.makeText(this@ExerciseActivity, "网络连接失败", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ExerciseActivity, "Network connection failed", Toast.LENGTH_SHORT).show()
                 onAppended?.invoke(emptyList())
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(this@ExerciseActivity, "发生未知错误: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ExerciseActivity, "Unknown error occurred: ${e.message}", Toast.LENGTH_SHORT).show()
                 onAppended?.invoke(emptyList())
             } finally {
                 isLoading = false
             }
         }
     }
+
 
     /**
      * 重建可选项：

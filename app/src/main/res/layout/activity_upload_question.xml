@@ -1,110 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#EAF8E6">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:layout_height="?attr/actionBarSize"
+        app:navigationIcon="@android:drawable/ic_menu_revert"
+        app:title="Upload Question"
+        app:titleCentered="true"
+        android:backgroundTint="?attr/colorSurface"/>
 
-        <!-- 返回 -->
-        <ImageButton
-            android:id="@+id/btnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/app_name"
-            android:padding="8dp"
-            android:tint="@android:color/black"
-            android:src="@android:drawable/ic_menu_revert"
-            android:layout_marginBottom="8dp" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:layout_marginTop="?attr/actionBarSize">
 
-        <!-- 题干 -->
-        <EditText
-            android:id="@+id/etQuestion"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Question（必填）"
-            android:inputType="textMultiLine"
-            android:maxLines="4"
-            android:padding="12dp"
-            android:layout_marginBottom="12dp" />
+            android:layout_height="wrap_content">
 
-        <!-- 选项 -->
-        <EditText
-            android:id="@+id/etOptions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Options（例如：1,2,3）"
-            android:inputType="text"
-            android:padding="12dp"
-            android:layout_marginBottom="12dp" />
+            <!-- 基本信息 -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="18dp"
+                app:cardUseCompatPadding="true"
+                android:layout_marginBottom="16dp">
 
-        <!-- 答案 -->
-        <EditText
-            android:id="@+id/etAnswer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Answer（例如：1）"
-            android:inputType="text"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp" />
+                <LinearLayout
+                    android:padding="16dp"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-        <!-- 四个分类选择按钮 -->
-        <Button
-            android:id="@+id/btnGrade"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Grade（默认 other）"
-            android:layout_marginBottom="8dp" />
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:hint="Question（必填）"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etQuestion"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textMultiLine"
+                            android:maxLines="4"/>
+                    </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/btnSubject"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Subject（默认 other）"
-            android:layout_marginBottom="8dp" />
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:hint="Image（URL 或 Base64，可留空）"
+                        android:layout_marginTop="12dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+                    </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/btnCategory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Category（默认 other）"
-            android:layout_marginBottom="8dp" />
+                    <TextView
+                        android:id="@+id/tvGrade"
+                        style="@style/FacetRow"
+                        android:text="Grade（默认 other）"/>
+                    <TextView
+                        android:id="@+id/tvSubject"
+                        style="@style/FacetRow"
+                        android:text="Subject（默认 other）"/>
+                    <TextView
+                        android:id="@+id/tvCategory"
+                        style="@style/FacetRow"
+                        android:text="Category（默认 other）"/>
+                    <TextView
+                        android:id="@+id/tvTopic"
+                        style="@style/FacetRow"
+                        android:text="Topic（默认 other）"/>
 
-        <Button
-            android:id="@+id/btnTopic"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Topic（默认 other）"
-            android:layout_marginBottom="16dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-        <!-- 图片（可 URL 或 Base64） -->
-        <EditText
-            android:id="@+id/etImage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Image（URL 或 Base64，可留空）"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp" />
+            <!-- 选项 -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="18dp"
+                app:cardUseCompatPadding="true">
 
-        <Button
-            android:id="@+id/btnSubmit"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:text="UPLOAD QUESTION" />
+                <LinearLayout
+                    android:padding="16dp"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-        <ProgressBar
-            android:id="@+id/progress"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:visibility="gone"
-            style="?android:attr/progressBarStyleLarge"/>
-    </LinearLayout>
-</ScrollView>
+                    <TextView
+                        android:text="Choices"
+                        android:textStyle="bold"
+                        android:textSize="16sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"/>
+
+                    <LinearLayout
+                        android:id="@+id/choicesContainer"
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnAddChoice"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:text="Add Choice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        app:icon="@android:drawable/ic_input_add"
+                        app:iconGravity="textStart"
+                        app:iconPadding="8dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSubmit"
+                android:text="UPLOAD QUESTION"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="16dp"/>
+
+            <ProgressBar
+                android:id="@+id/progress"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                android:visibility="gone"/>
+        </LinearLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

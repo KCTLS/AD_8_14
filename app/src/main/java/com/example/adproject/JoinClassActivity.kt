@@ -118,10 +118,10 @@ class JoinClassActivity : AppCompatActivity() {
 
         if (byToken) {
             inputLayout.hint = "Enter token"
-            inputLayout.helperText = "示例：02f4fe40-ee5c-433c-9dd2-94946d6e2b79"
+            inputLayout.helperText = "Example: 02f4fe40-ee5c-433c-9dd2-94946d6e2b79"
         } else {
             inputLayout.hint = "Enter class name"
-            inputLayout.helperText = "示例：SA59 / Python / Java"
+            inputLayout.helperText = "Example: SA59 / Python / Java"
         }
     }
 
@@ -149,7 +149,7 @@ class JoinClassActivity : AppCompatActivity() {
         if (modeByToken) {
             val uuidRegex = Regex("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\$")
             if (!uuidRegex.matches(key)) {
-                inputLayout.error = "Token 格式看起来不对（应为 UUID）"
+                inputLayout.error = "Token format looks invalid (should be a UUID)"
                 inputLayout.isErrorEnabled = true
                 return
             }
@@ -164,13 +164,13 @@ class JoinClassActivity : AppCompatActivity() {
                     if (!resp.isSuccessful || body == null) {
                         val raw = resp.errorBody()?.string()
                         Log.e("JoinClass", "HTTP ${resp.code()} ${resp.message()} body=$raw")
-                        Triple(false, "网络/服务器错误：HTTP ${resp.code()}", -1)
+                        Triple(false, "Network/Server error: HTTP ${resp.code()}", -1)
                     } else {
                         // 统一交给上层根据 code/msg 分发
                         Triple(true, body.msg.orEmpty(), body.code)
                     }
                 } catch (e: Exception) {
-                    Triple(false, e.message ?: "请求失败", -1)
+                    Triple(false, e.message ?: "Request failed", -1)
                 }
             }
 
@@ -186,19 +186,19 @@ class JoinClassActivity : AppCompatActivity() {
 
             when (code) {
                 1 -> { // 成功
-                    Toast.makeText(this@JoinClassActivity, if (msg.isBlank()) "加入成功" else msg, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@JoinClassActivity, if (msg.isBlank()) "Joined successfully" else msg, Toast.LENGTH_SHORT).show()
                     setResult(RESULT_OK)
                     finish()
                 }
                 0 -> {
                     // 业务不通过（例如：还未到加入时间 / 已过期 / 已满 / 不存在 / 已加入 等等）
-                    val tip = if (msg.isBlank()) "暂时无法加入，请稍后再试" else msg
+                    val tip = if (msg.isBlank()) "Unable to join for now, please try again later" else msg
                     inputLayout.error = tip
                     inputLayout.isErrorEnabled = true
                     Toast.makeText(this@JoinClassActivity, tip, Toast.LENGTH_SHORT).show()
                 }
                 else -> {
-                    val tip = if (msg.isBlank()) "加入失败，请稍后再试" else msg
+                    val tip = if (msg.isBlank()) "Join failed, please try again later" else msg
                     inputLayout.error = tip
                     inputLayout.isErrorEnabled = true
                     Toast.makeText(this@JoinClassActivity, tip, Toast.LENGTH_SHORT).show()

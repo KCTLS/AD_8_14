@@ -1,12 +1,15 @@
+// model/UploadQuestionRequest.kt
 package com.example.adproject.model
 
-data class UploadQuestionDTO(
-    val answer: String,      // "1"
-    val category: String,    // "other"
-    val grade: String,       // "other"
-    val image: String,       // 可为空字符串
-    val options: List<Int>,  // [1,2,3]
-    val question: String,    // "123"
-    val subject: String,     // "other"
-    val topic: String        // "other"
+// 用于发给服务端的 payload（键名对齐后端）
+data class UploadQuestionRequest(
+    val question: String,
+    val subject: String,
+    val category: String,
+    val topic: String,
+    val grade: String,
+    val image: String? = null,
+    val options: List<String>,  // 和后端的字段对齐
+    val answer: Int            // 和后端的类型对齐
 )
+

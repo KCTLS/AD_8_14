@@ -126,7 +126,7 @@ class AnnouncementActivity : AppCompatActivity() {
                 }
                 applyData(data)
             } catch (e: Exception) {
-                showToast("加载失败：${e.message}")
+                showToast("Loading failed：${e.message}")
                 applyData(emptyList())
             } finally {
                 swipe.isRefreshing = false
@@ -175,31 +175,31 @@ class AnnouncementActivity : AppCompatActivity() {
         val empty = list.isEmpty()
         emptyState.visibility = if (empty) View.VISIBLE else View.GONE
         listView.visibility = if (empty) View.GONE else View.VISIBLE
-        emptyText.text = if (selectedClassId == null) "暂无任何通知" else "当前班级无通知"
+        emptyText.text = if (selectedClassId == null) "No notifications" else "No notifications for the current class"
     }
 
     /** 筛选 */
     private fun showFilterDialog() {
-        val names = mutableListOf("全部消息") + joinedClasses.map { it.className }
+        val names = mutableListOf("All messages") + joinedClasses.map { it.className }
         val checked = when (val cid = selectedClassId) {
             null -> 0
             else -> (joinedClasses.indexOfFirst { it.classId == cid }.takeIf { it >= 0 } ?: -1) + 1
         }
 
         AlertDialog.Builder(this)
-            .setTitle("筛选班级")
+            .setTitle("Filter classes")
             .setSingleChoiceItems(names.toTypedArray(), checked) { d, which ->
                 selectedClassId = if (which == 0) null else joinedClasses[which - 1].classId
                 d.dismiss()
                 reloadAnnouncements()
             }
-            .setNegativeButton("取消", null)
+            .setNegativeButton("Cancel", null)
             .show()
     }
 
     /** 提示未登录 */
     private fun checkAuthAndToast(code: Int?, msg: String?) {
-        if (code == 0) showToast(msg ?: "未登录或会话已失效")
+        if (code == 0) showToast(msg ?: "Not logged in or session expired")
     }
 
     /** [yyyy,MM,dd,HH,mm] -> millis */

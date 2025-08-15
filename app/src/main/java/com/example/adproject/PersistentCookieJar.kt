@@ -83,4 +83,11 @@ class PersistentCookieJar(ctx: Context) : CookieJar {
             emptyList()
         }
     }
+
+    // api/PersistentCookieJar.kt 末尾增加：
+    fun hasCookies(): Boolean {
+        val s = sp.getString(KEY, "[]") ?: "[]"
+        return try { org.json.JSONArray(s).length() > 0 } catch (_: Exception) { false }
+    }
+
 }

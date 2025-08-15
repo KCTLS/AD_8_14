@@ -1,0 +1,11 @@
+<resources>
+    <style name="FacetRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
+</resources>

@@ -80,7 +80,7 @@ class AssignmentDoActivity : AppCompatActivity() {
 
     private fun loadQuestions() {
         if (assignmentId <= 0) {
-            Toast.makeText(this, "缺少 assignmentId", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Missing assignmentId", Toast.LENGTH_SHORT).show()
             return
         }
         setLoading(true)
@@ -122,7 +122,7 @@ class AssignmentDoActivity : AppCompatActivity() {
     private suspend fun submitAssignment() {
         val progressState = AssignmentProgressStore.get(this, assignmentId)
         if (progressState.answers.size != total) {
-            Toast.makeText(this, "还有未作答的题目", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Some questions are unanswered", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -179,11 +179,11 @@ class AssignmentDoActivity : AppCompatActivity() {
 
         if (ok) {
             AssignmentProgressStore.setCompleted(this, assignmentId, true)
-            Toast.makeText(this, "提交成功，准确率：$accuracyRounded%", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Submission successful, accuracy: $accuracyRounded%", Toast.LENGTH_LONG).show()
             setResult(RESULT_OK)
             finish()
         } else {
-            Toast.makeText(this, "提交失败，请稍后重试", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Submission failed, please try again later", Toast.LENGTH_SHORT).show()
         }
     }
 }

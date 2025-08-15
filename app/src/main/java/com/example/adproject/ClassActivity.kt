@@ -42,6 +42,19 @@ class ClassActivity : AppCompatActivity() {
             insets
         }
 
+        // ✅ 设置标题：先用本地缓存名字
+        val titleView = findViewById<TextView>(R.id.classTitle)
+        val cachedName = UserSession.name(this) ?: "Your"
+        titleView.text = "${toPossessive(cachedName)} Class"
+
+        // ✅ 后台异步从服务端同步名字（后端就绪后会更新）
+        uiScope.launch {
+            val latest = UserSession.syncNameFromServer(this@ClassActivity)
+            if (!latest.isNullOrBlank()) {
+                titleView.text = "${toPossessive(latest)} Class"
+            }
+        }
+
         // 顶部三个按钮
         findViewById<Button>(R.id.announcementButton).setOnClickListener {
             startActivity(Intent(this, AnnouncementActivity::class.java))
@@ -123,19 +136,19 @@ class ClassActivity : AppCompatActivity() {
                         val list = body.data?.list ?: emptyList()
                         adapter.replace(list)
                     } else {
-                        Toast.makeText(this@ClassActivity, body?.msg ?: "加载班级失败", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@ClassActivity, body?.msg ?: "Failed to load classes", Toast.LENGTH_SHORT).show()
                         adapter.replace(emptyList())
                     }
                 } else {
-                    Toast.makeText(this@ClassActivity, "网络错误：${resp.code()}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@ClassActivity, "Network error：${resp.code()}", Toast.LENGTH_SHORT).show()
                     adapter.replace(emptyList())
                 }
             } catch (e: IOException) {
-                Toast.makeText(this@ClassActivity, "连接失败", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ClassActivity, "Connection failed", Toast.LENGTH_SHORT).show()
                 adapter.replace(emptyList())
             } catch (e: Exception) {
                 e.printStackTrace()
-                Toast.makeText(this@ClassActivity, "未知错误：${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@ClassActivity, "Unknown error：${e.message}", Toast.LENGTH_SHORT).show()
                 adapter.replace(emptyList())
             } finally {
                 isLoading = false
@@ -193,4 +206,12 @@ class ClassActivity : AppCompatActivity() {
             return view
         }
     }
+
+    private fun toPossessive(nameRaw: String): String {
+        val name = nameRaw.trim()
+        if (name.isEmpty() || name.equals("your", ignoreCase = true)) return "Your"
+        // 结尾是 s 的情况用 Chris'，其余用 Lewis's
+        return if (name.last().lowercaseChar() == 's') "$name'" else "$name's"
+    }
+
 }

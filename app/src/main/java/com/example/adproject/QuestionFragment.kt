@@ -112,7 +112,7 @@ class QuestionFragment : Fragment() {
         }
         val idx = recList.indexOf(questionId)
         if (idx <= 0) {
-            Toast.makeText(requireContext(), "已经是第一题", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "This is already the first question", Toast.LENGTH_SHORT).show()
             return
         }
         val prevId = recList[idx - 1]
@@ -129,7 +129,7 @@ class QuestionFragment : Fragment() {
         }
         val idx = recList.indexOf(questionId)
         if (idx < 0 || idx >= recList.size - 1) {
-            Toast.makeText(requireContext(), "已经是最后一题", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "This is already the last question", Toast.LENGTH_SHORT).show()
             return
         }
         val nextId = recList[idx + 1]
@@ -191,22 +191,22 @@ class QuestionFragment : Fragment() {
                         prevBtn.isEnabled = (act.getPrevQuestionId(questionId) != null)
                     }
                 } else {
-                    Toast.makeText(requireContext(), "题目数据为空", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Question data is empty", Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(requireContext(), "加载失败：${resp.code()}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Failed to load: ${resp.code()}", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun onConfirmClicked() {
         if (selectedOptionIndex == -1) {
-            Toast.makeText(requireContext(), "请选择一个选项", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Please select an option", Toast.LENGTH_SHORT).show()
             return
         }
         val correct = (selectedOptionIndex == correctAnswerIndex)
-        val msg = if (correct) "✅ 答对了！"
-        else "❌ 答错了，正确答案是：${choices.getOrNull(correctAnswerIndex) ?: "-"}"
+        val msg = if (correct) "✅ Correct!"
+        else "❌ Incorrect. The correct answer is: ${choices.getOrNull(correctAnswerIndex) ?: "-"}"
 
         feedbackText.text = msg
         feedbackText.visibility = View.VISIBLE
@@ -222,12 +222,12 @@ class QuestionFragment : Fragment() {
                     )
                 }
                 if (rsp.isSuccessful && rsp.body()?.code == 1) {
-                    Toast.makeText(requireContext(), "提交成功", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Submitted successfully", Toast.LENGTH_SHORT).show()
                 } else {
-                    Toast.makeText(requireContext(), "提交失败", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Submission failed", Toast.LENGTH_SHORT).show()
                 }
             } catch (_: Exception) {
-                Toast.makeText(requireContext(), "网络错误", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Network error", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -246,7 +246,7 @@ class QuestionFragment : Fragment() {
                     .replace(R.id.fragmentContainer, newInstance(nextId))
                     .commit()
             } else {
-                Toast.makeText(requireContext(), "已经是最后一题", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "This is already the last question", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -258,7 +258,7 @@ class QuestionFragment : Fragment() {
             goNext(); return
         }
         if (nextId == null) {
-            Toast.makeText(requireContext(), "已经是第一题", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "This is already the first question", Toast.LENGTH_SHORT).show()
             return
         }
         parentFragmentManager.beginTransaction()

@@ -1,3 +1,4 @@
+// LoginActivity.kt
 package com.example.adproject
 
 import android.content.Intent
@@ -19,15 +20,22 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 已登录则直达
-        if (UserSession.isLoggedIn(this)) {
-            goExercise()
-            finish()
-            return
-        }
-
         vb = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(vb.root)
+
+        // ✅ 只有在本地认为“已登录”时，才进一步去服务端二次校验；校验失败就清会话并留在登录页
+        if (UserSession.isLoggedIn(this)) {
+            lifecycleScope.launch {
+                val alive = ApiClient.isSessionAlive()
+                if (alive) {
+                    goExercise()
+                    finish()
+                    return@launch
+                } else {
+                    UserSession.clear(this@LoginActivity)
+                }
+            }
+        }
 
         vb.linkToRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
@@ -37,15 +45,16 @@ class LoginActivity : AppCompatActivity() {
             val email = vb.inputEmail.editText?.text?.toString()?.trim().orEmpty()
             val pwd   = vb.inputPassword.editText?.text?.toString()?.trim().orEmpty()
             if (email.isEmpty() || pwd.isEmpty()) {
-                Toast.makeText(this, "请输入邮箱和密码", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             lifecycleScope.launch {
                 val ok = loginAndHandle(email, pwd)
                 if (ok) {
-                    Toast.makeText(this@LoginActivity, "登录成功", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@LoginActivity, "Login successful", Toast.LENGTH_SHORT).show()
                     goExercise()
+                    finish()
                 }
             }
         }
@@ -54,44 +63,35 @@ class LoginActivity : AppCompatActivity() {
     private suspend fun loginAndHandle(email: String, pwd: String): Boolean {
         return try {
             val resp: Response<LoginResultVO> = ApiClient.api.login(LoginRequest(email, pwd))
-
             if (!resp.isSuccessful) {
                 Toast.makeText(
                     this,
-                    "登录失败(${resp.code()}): ${resp.errorBody()?.string()?.take(200) ?: "无响应"}",
+                    "Login failed(${resp.code()}): ${resp.errorBody()?.string()?.take(200) ?: "No response"}",
                     Toast.LENGTH_LONG
                 ).show()
                 return false
             }
 
             val data = resp.body()
-
-            // 成功条件：status=ok 且 currentAuthority=student
             val success = data?.status.equals("ok", true)
                     && data?.currentAuthority.equals("student", true)
 
             if (!success) {
-                val tip = data?.message ?: data?.msg ?: "账号或密码错误"
+                val tip = data?.message ?: data?.msg ?: "Incorrect email or password"
                 Toast.makeText(this, tip, Toast.LENGTH_LONG).show()
                 return false
             }
 
-            // === 登录成功处理 ===
+            // 登录成功：保存本地会话并写入 token（如有）
             val uid = (data?.userId ?: -1).toInt()
             val uname = data?.userName ?: email.substringBefore("@")
-            UserSession.save(this, userId = uid, userName = uname, email = email)
-
-            data?.token?.let { token ->
-                if (token.isNotBlank()) ApiClient.updateAuthToken(token)
-            }
-
+            UserSession.save(this, userId = uid, userName = uname, email = email, token = data?.token)
             true
         } catch (e: Exception) {
-            Toast.makeText(this, "网络异常：${e.message}", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Network error：${e.message}", Toast.LENGTH_LONG).show()
             false
         }
     }
-
 
     private fun goExercise() {
         startActivity(Intent(this, ExerciseActivity::class.java).apply {

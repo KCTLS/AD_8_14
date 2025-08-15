@@ -19,10 +19,10 @@ class HomeActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_home)
 
-        // 没登录就直接回登录页
+        // 未登录直接回登录页
         ensureLoggedInOrGoLogin()
 
-        // Edge-to-edge insets（你的布局里根容器 id 需为 main；没有就去掉这段）
+        // Edge-to-edge（若根布局 id 不是 main，可删除这段）
         val mainId = resources.getIdentifier("main", "id", packageName)
         if (mainId != 0) {
             ViewCompat.setOnApplyWindowInsetsListener(findViewById(mainId)) { v, insets ->
@@ -46,7 +46,7 @@ class HomeActivity : AppCompatActivity() {
         // 默认选中 Home
         setSelectedButton(homeButton)
 
-        // 显示用户名（布局里给用户名 TextView 起个 id：@+id/userNameText）
+        // 显示用户名（先用缓存，后台异步拉服务器）
         setUserNameIfPresent()
 
         // 底部导航点击
@@ -62,19 +62,14 @@ class HomeActivity : AppCompatActivity() {
             setSelectedButton(classButton)
             startActivity(Intent(this, ClassActivity::class.java))
         }
-        homeButton.setOnClickListener {
-            setSelectedButton(homeButton)
-            // 当前页，无操作
-        }
+        homeButton.setOnClickListener { setSelectedButton(homeButton) }
 
         // 账户/设置
         profileButton.setOnClickListener {
             Toast.makeText(this, "Go to Account Management", Toast.LENGTH_SHORT).show()
-            // TODO: startActivity(Intent(this, ProfileActivity::class.java))
         }
         settingsButton.setOnClickListener {
             Toast.makeText(this, "Go to Settings", Toast.LENGTH_SHORT).show()
-            // TODO: startActivity(Intent(this, SettingsActivity::class.java))
         }
 
         // 退出登录
@@ -84,11 +79,13 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    // HomeActivity.kt 里
     override fun onResume() {
         super.onResume()
+        // 仅保留登录校验；已删除 /student/dashboard 的心跳请求
         ensureLoggedInOrGoLogin()
-        // 兜底：顺手 ping 一个需要登录的接口（如 dashboard）
+
+        // 如果以后想恢复会话心跳，请取消下面注释：
+        /*
         lifecycleScope.launch {
             try {
                 val r = com.example.adproject.api.ApiClient.api.dashboard()
@@ -99,10 +96,10 @@ class HomeActivity : AppCompatActivity() {
                         goLoginClearBackStack()
                     }
                 }
-            } catch (_: Exception) { /* 网络异常忽略，保留现状 */ }
+            } catch (_: Exception) {}
         }
+        */
     }
-
 
     /** 如果未登录，跳到登录页并清空返回栈 */
     private fun ensureLoggedInOrGoLogin() {
@@ -115,7 +112,6 @@ class HomeActivity : AppCompatActivity() {
         startActivity(Intent(this, LoginActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         })
-        // CLEAR_TASK 已经清栈，finish 可省略
     }
 
     private fun setSelectedButton(selectedButton: Button) {
@@ -127,12 +123,17 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setUserNameIfPresent() {
-        val userNameViewId = resources.getIdentifier("userNameText", "id", packageName)
-        if (userNameViewId != 0) {
-            val tv = findViewById<TextView>(userNameViewId)
-            val name = UserSession.name(this)
-            if (!name.isNullOrBlank()) tv.text = name
+        val tv = findViewById<TextView>(R.id.userNameText) ?: return
+
+        // 1) 先显示缓存
+        UserSession.name(this)?.takeIf { it.isNotBlank() }?.let { tv.text = it }
+
+        // 2) 后台同步（等后端就绪后会更新）
+        lifecycleScope.launch {
+            val latest = UserSession.syncNameFromServer(this@HomeActivity)
+            if (!latest.isNullOrBlank()) {
+                tv.text = latest
+            }
         }
     }
-
 }

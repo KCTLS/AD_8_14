@@ -49,7 +49,7 @@ class RecommendedActivity : AppCompatActivity() {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            Toast.makeText(this, "已返回推荐列表", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Returned to the recommended list", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -114,10 +114,10 @@ class RecommendedActivity : AppCompatActivity() {
                     r.isSuccessful && r.body()?.get("code")?.asInt == 1
                 } catch (_: Exception) { false }
             }
-            if (!trigOk) return@launch fail("触发推荐失败")
+            if (!trigOk) return@launch fail("Failed to trigger recommendation")
 
             val ids = fetchRecommendIdsWithRetry()
-            if (ids.isEmpty()) return@launch fail("当前没有可用的推荐题目")
+            if (ids.isEmpty()) return@launch fail("There are currently no recommended questions available")
 
             adapter.clear()
             idOrder.clear()
@@ -160,7 +160,7 @@ class RecommendedActivity : AppCompatActivity() {
         if (index >= ids.size) {
             showLoading(false)
             isLoading = false
-            Toast.makeText(this, "已获取到 ${adapter.itemCount} 条推荐", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Obtained ${adapter.itemCount} Recommendations", Toast.LENGTH_SHORT).show()
             return
         }
         val id = ids[index]

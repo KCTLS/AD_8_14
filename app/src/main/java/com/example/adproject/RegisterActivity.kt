@@ -38,10 +38,10 @@ class RegisterActivity : AppCompatActivity() {
             val pwd   = vb.inputPassword.editText?.text?.toString()?.trim().orEmpty()
 
             if (name.isEmpty() || email.isEmpty() || pwd.isEmpty()) {
-                toast("请填写完整信息"); return@setOnClickListener
+                toast("Please complete all required fields"); return@setOnClickListener
             }
             if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                toast("邮箱格式不正确"); return@setOnClickListener
+                toast("Invalid email format"); return@setOnClickListener
             }
 
             // ✅ 修复空安全：先 orEmpty() 再 ifBlank { ... }
@@ -75,7 +75,7 @@ class RegisterActivity : AppCompatActivity() {
                     // 1) 调注册
                     val regResp = ApiClient.api.register(req)
                     if (!regResp.isSuccessful) {
-                        toast("注册失败(${regResp.code()}): ${regResp.errorBody()?.string()?.take(200) ?: "无响应"}")
+                        toast("Registration failed (${regResp.code()}): ${regResp.errorBody()?.string()?.take(200) ?: "No response"}")
                         return@launch
                     }
                     val body = regResp.body()
@@ -87,14 +87,14 @@ class RegisterActivity : AppCompatActivity() {
                             // 2) 注册成功后自动登录
                             val loginResp = ApiClient.api.login(LoginRequest(email, pwd))
                             if (!loginResp.isSuccessful) {
-                                toast("已注册，但自动登录失败(${loginResp.code()})")
+                                toast("Registered, but auto-login failed (${loginResp.code()})")
                                 return@launch
                             }
                             val loginData = loginResp.body()
                             val ok = loginData?.status.equals("ok", true)
                                     && loginData?.currentAuthority.equals("student", true)
                             if (!ok) {
-                                val tip = loginData?.message ?: loginData?.msg ?: "已注册，但登录失败"
+                                val tip = loginData?.message ?: loginData?.msg ?: "Registered, but login failed"
                                 toast(tip); return@launch
                             }
 
@@ -106,27 +106,27 @@ class RegisterActivity : AppCompatActivity() {
                                 if (token.isNotBlank()) ApiClient.updateAuthToken(token)
                             }
 
-                            toast("注册并登录成功")
+                            toast("Registration and login successful")
                             startActivity(Intent(this@RegisterActivity, ExerciseActivity::class.java).apply {
                                 flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                             })
                         }
                         4 -> {
                             // 明确提示：邮箱重复（或其他可恢复的业务错误）
-                            val msg = body.msg ?: "邮箱已存在，请更换邮箱"
+                            val msg = body.msg ?: "Email already exists, please use a different one"
                             toast(msg)
                         }
                         0 -> {
-                            toast(body.msg ?: "服务器异常，请稍后再试")
+                            toast(body.msg ?: "Server error, please try again later")
                         }
                         else -> {
-                            toast(body?.msg ?: "注册失败")
+                            toast(body?.msg ?: "Registration failed")
                         }
                     }
                 } catch (e: HttpException) {
-                    toast("网络错误：HTTP ${e.code()} ${e.message()}")
+                    toast("Network error: HTTP ${e.code()} ${e.message()}")
                 } catch (e: Exception) {
-                    toast("网络异常：${e.message}")
+                    toast("Network error: ${e.message}")
                 } finally {
                     setLoading(false)
                 }

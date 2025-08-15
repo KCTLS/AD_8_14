@@ -43,7 +43,7 @@ class AnswerHistoryActivity : AppCompatActivity() {
         if (result.resultCode == Activity.RESULT_OK) {
             // 需要的话可根据 answeredId 更新某条的状态
             // val answeredId = result.data?.getIntExtra("answeredId", -1)
-            Toast.makeText(this, "已返回历史列表", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Returned to history list", Toast.LENGTH_SHORT).show()
         }
     }
 
