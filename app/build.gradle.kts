@@ -15,9 +15,6 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        // 可留作兜底（也可删掉，靠 flavors 提供）
-        buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:8080/student/\"")
     }
 
     // ✅ 合并成一个 buildTypes
@@ -58,7 +55,7 @@ android {
     productFlavors {
         create("dev") {
             dimension = "env"
-            buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:8080/student/\"")
+            buildConfigField("String", "BASE_URL", "\"http://adproject-backend.southeastasia.cloudapp.azure.com/student/\"")
         }
         create("prod") {
             dimension = "env"
